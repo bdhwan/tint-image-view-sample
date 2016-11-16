@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.AttributeSet;
@@ -45,10 +47,16 @@ public class TintImageMaskView extends ImageView {
 
     PorterDuffXfermode mode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
 
+    Rect src;
+    Rect dst;
+
+
 
     public TintImageMaskView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        src = new Rect();
+        dst = new Rect();
         colorPaint = new Paint();
         maskPaint = new Paint();
         maskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
@@ -148,6 +156,9 @@ public class TintImageMaskView extends ImageView {
 
             if (width != 0 && mMask == null) {
                 mMask = ((BitmapDrawable) getDrawable()).getBitmap();
+                src.set(0,0,mMask.getWidth(),mMask.getHeight());
+                dst.set(0,0,width,height);
+                Log.d("log","src = "+src.toString()+", dst = "+dst.toString());
                 mImage = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                 finalBit = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             }
@@ -156,15 +167,15 @@ public class TintImageMaskView extends ImageView {
             if (mImage != null && mMask != null) {
                 tempCanvas.setBitmap(mImage);
                 colorPaint.setColor(currentColor);
-                tempCanvas.drawRect(0, 0, width, height, colorPaint);
                 tempCanvas.drawColor(currentColor);
 
                 tempCanvas.setBitmap(finalBit);
                 tempCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
+
                 tempCanvas.drawBitmap(mImage, 0, 0, maskPaint);
                 maskPaint.setXfermode(mode);
-                tempCanvas.drawBitmap(mMask, 0, 0, maskPaint);
+                tempCanvas.drawBitmap(mMask, src, dst, maskPaint);
                 maskPaint.setXfermode(null);
                 super.onDraw(canvas);
                 canvas.drawBitmap(finalBit, 0, 0, colorPaint);
