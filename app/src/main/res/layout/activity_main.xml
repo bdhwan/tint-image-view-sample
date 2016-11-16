@@ -22,7 +22,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/ic_launcher"
-            custom:initColor="#00ff00" />
+            custom:initColor="#00000000" />
 
 
     </RelativeLayout>

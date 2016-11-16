@@ -13,6 +13,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 
@@ -45,7 +46,6 @@ public class TintImageMaskView extends ImageView {
     PorterDuffXfermode mode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
 
 
-
     public TintImageMaskView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -55,21 +55,22 @@ public class TintImageMaskView extends ImageView {
         imagePaint = new Paint();
         imagePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OVER));
         tempCanvas = new Canvas();
-        currentColor = context.obtainStyledAttributes( attrs, R.styleable.TintImageMaskView).getColor(R.styleable.TintImageMaskView_initColor, Color.parseColor("#00ff00"));
+        currentColor = context.obtainStyledAttributes(attrs, R.styleable.TintImageMaskView).getColor(R.styleable.TintImageMaskView_initColor, Color.parseColor("#000000"));
+
 
     }
 
-    public int getCurrentColor(){
+    public int getCurrentColor() {
         return currentColor;
     }
 
 
     //color animation
-    public void changeColor(final int target,long startDelay, long duration, Interpolator interpolator){
+    public void changeColor(final int target, long startDelay, long duration, Interpolator interpolator) {
 
         targetColor = target;
 
-        if(isAnimating){
+        if (isAnimating) {
             return;
         }
         isAnimating = true;
@@ -120,69 +121,64 @@ public class TintImageMaskView extends ImageView {
 
     }
 
-    public void changeColor(final int target,long startDelay, long duration){
-        changeColor(target,0,500, PathInterpolatorCompat.create(0.33f, 0f, 0.10f, 1.0f));
+    public void changeColor(final int target, long startDelay, long duration) {
+        changeColor(target, 0, 500, PathInterpolatorCompat.create(0.33f, 0f, 0.10f, 1.0f));
     }
 
-    public void changeColor(final int target,long startDelay){
-        changeColor(target,0,500);
+    public void changeColor(final int target, long startDelay) {
+        changeColor(target, 0, 500);
     }
 
-    public void changeColor(final int target){
-        changeColor(target,0);
+    public void changeColor(final int target) {
+        changeColor(target, 0);
     }
-
-
-
-
-
-
-
 
 
     @Override
     protected void onDraw(Canvas canvas) {
 
 
-//        super.onDraw(canvas);
-        int width = getWidth();
-        int height = getHeight();
+        if(currentColor==Color.TRANSPARENT){
+            super.onDraw(canvas);
+        }
+        else{
 
-        if(width!=0&&mMask==null){
-            mMask = ((BitmapDrawable)getDrawable()).getBitmap();
-            mImage = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            finalBit = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
+            int width = getWidth();
+            int height = getHeight();
+
+            if (width != 0 && mMask == null) {
+                mMask = ((BitmapDrawable) getDrawable()).getBitmap();
+                mImage = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                finalBit = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            }
+
+
+            if (mImage != null && mMask != null) {
+                tempCanvas.setBitmap(mImage);
+                colorPaint.setColor(currentColor);
+                tempCanvas.drawRect(0, 0, width, height, colorPaint);
+                tempCanvas.drawColor(currentColor);
+
+                tempCanvas.setBitmap(finalBit);
+                tempCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+
+                tempCanvas.drawBitmap(mImage, 0, 0, maskPaint);
+                maskPaint.setXfermode(mode);
+                tempCanvas.drawBitmap(mMask, 0, 0, maskPaint);
+                maskPaint.setXfermode(null);
+                super.onDraw(canvas);
+                canvas.drawBitmap(finalBit, 0, 0, colorPaint);
+            }
         }
 
 
 
 
+    }
 
-        if(mImage!=null&&mMask!=null){
-
-            tempCanvas.setBitmap(mImage);
-            colorPaint.setColor(currentColor);
-            tempCanvas.drawRect(0, 0, width, height, colorPaint);
-            tempCanvas.drawColor(currentColor);
-
-            tempCanvas.setBitmap(finalBit);
-            tempCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-
-            tempCanvas.drawBitmap(mImage, 0, 0, maskPaint);
-            maskPaint.setXfermode(mode);
-            tempCanvas.drawBitmap(mMask, 0, 0, maskPaint);
-            maskPaint.setXfermode(null);
-
-            canvas.save();
-            canvas.drawBitmap(finalBit, 0, 0, colorPaint);
-            canvas.restore();
-
-
-        }
-
-
-
-
-
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        invalidate();
     }
 }

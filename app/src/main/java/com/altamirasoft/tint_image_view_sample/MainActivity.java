@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     public void clickTint(View v){
 
         if(view.getCurrentColor()!= Color.RED){
-            view.changeColor(Color.RED);
+            view.changeColor(Color.parseColor("#44ff0000"));
         }
         else{
             view.changeColor(Color.BLUE);
