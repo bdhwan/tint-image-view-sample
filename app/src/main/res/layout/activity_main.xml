@@ -16,15 +16,14 @@
         android:layout_height="match_parent">
 
         <com.altamirasoft.tint_image_view.TintImageMaskView
-
             android:id="@+id/view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/ic_launcher"
-
             custom:initColor="#00ff00" />
+
 
     </RelativeLayout>
 
@@ -35,25 +34,25 @@
 
         <Button
             android:id="@+id/button"
-            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:onClick="clickFadeOut"
             android:text="FadeOut" />
 
         <Button
             android:id="@+id/button2"
-            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:onClick="clickFadeIn"
             android:text="FadeIn" />
 
         <Button
             android:id="@+id/button3"
-            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:onClick="clickTint"
             android:text="Tint" />
 

@@ -1,4 +1,47 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release' // must be applied after your artifact generating plugin (eg. java / com.android.library)
+
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.3.4'
+    }
+}
+
+
+publish {
+    userOrg = 'bdhwan'
+    repoName = 'vxmaker'
+    groupId = 'com.altamirasoft.tintimageview'
+    artifactId = 'tint-image-view'
+    publishVersion = genVersionName()
+    desc = 'tint animation image view util for android'
+    website = 'https://github.com/bdhwan/tint-image-view'
+}
+
+
+
+def gitVersion() {
+
+    def process = "git rev-list master --first-parent --count".execute()
+    def result = process.text.trim()
+    if (result == "") {
+        return 1
+    } else {
+        return result.toInteger()
+    }
+}
+
+def genVersionName() {
+    return '0.1.'+gitVersion()
+}
+
+
+
+
 
 android {
     compileSdkVersion 25
@@ -7,11 +50,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        versionCode gitVersion()
+        versionName genVersionName()
     }
     buildTypes {
         release {
@@ -21,11 +61,11 @@ android {
     }
 }
 
+
+
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     compile 'com.android.support:appcompat-v7:25.0.1'
-    testCompile 'junit:junit:4.12'
+
 }
