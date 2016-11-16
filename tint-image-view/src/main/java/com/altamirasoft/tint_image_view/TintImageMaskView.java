@@ -179,6 +179,12 @@ public class TintImageMaskView extends ImageView {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        if(mMask != null){
+            mMask.recycle();
+            mImage.recycle();
+            finalBit.recycle();
+            mMask = null;
+        }
         invalidate();
     }
 }
