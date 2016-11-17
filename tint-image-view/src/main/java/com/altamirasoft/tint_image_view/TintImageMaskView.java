@@ -82,7 +82,7 @@ public class TintImageMaskView extends ImageView {
 
             @Override
             public void onAnimationUpdate(ValueAnimator animator) {
-                tintAlpha = (int) animator.getAnimatedValue();
+                tintAlpha = (float) animator.getAnimatedValue();
                 invalidate();
             }
 
