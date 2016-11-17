@@ -33,22 +33,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void clickFadeOut(View v){
 
-        ObjectAnimator anim =   ObjectAnimator.ofFloat(view, "alpha", 1f, 0f);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f);
         anim.start();
+
     }
 
     public void clickFadeIn(View v){
-        ObjectAnimator anim =   ObjectAnimator.ofFloat(view, "alpha", 0f, 1f);
+
+        ObjectAnimator anim = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f);
         anim.start();
+
     }
 
     public void clickTint(View v){
 
-        if(view.getCurrentColor()!= Color.RED){
+        if(view.getCurrentColor()!= Color.parseColor("#44ff0000")){
             view.changeColor(Color.parseColor("#44ff0000"));
         }
         else{
-            view.changeColor(Color.BLUE);
+            view.changeColor(Color.TRANSPARENT);
         }
 
     }

@@ -51,6 +51,9 @@ public class TintImageMaskView extends ImageView {
     Rect dst;
 
 
+    float tintAlpha = 1f;
+
+
 
     public TintImageMaskView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -61,11 +64,39 @@ public class TintImageMaskView extends ImageView {
         maskPaint = new Paint();
         maskPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         imagePaint = new Paint();
-        imagePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OVER));
         tempCanvas = new Canvas();
         currentColor = context.obtainStyledAttributes(attrs, R.styleable.TintImageMaskView).getColor(R.styleable.TintImageMaskView_initColor, Color.parseColor("#000000"));
+    }
+
+    public float getTintAlpha() {
+        return tintAlpha;
+    }
+
+    public void setTintAlpha(float tintAlpha) {
+        this.tintAlpha = tintAlpha;
+    }
+
+    public void changeTintAlpha(long startDelay, long duration, float value){
+        ValueAnimator alphaAnimation = ValueAnimator.ofFloat(tintAlpha,value);
+        alphaAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                tintAlpha = (int) animator.getAnimatedValue();
+                invalidate();
+            }
+
+        });
+        alphaAnimation.setStartDelay(startDelay);
+        alphaAnimation.setDuration(duration);
+        alphaAnimation.start();
+    }
 
 
+
+    public void setCurrentColor(int color){
+        this.currentColor = color;
+        invalidate();
     }
 
     public int getCurrentColor() {
@@ -178,7 +209,9 @@ public class TintImageMaskView extends ImageView {
                 tempCanvas.drawBitmap(mMask, src, dst, maskPaint);
                 maskPaint.setXfermode(null);
                 super.onDraw(canvas);
-                canvas.drawBitmap(finalBit, 0, 0, colorPaint);
+
+                imagePaint.setAlpha((int)(tintAlpha*255));
+                canvas.drawBitmap(finalBit, 0, 0, imagePaint);
             }
         }
 

@@ -17,11 +17,11 @@
 
         <com.altamirasoft.tint_image_view.TintImageMaskView
             android:id="@+id/view"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/profile_3"
+            android:src="@mipmap/ic_launcher"
             custom:initColor="#00000000" />
 
 
